@@ -22,7 +22,7 @@ cmake.cpm = cpm
 ---@field system boolean | nil
 
 ---@param config string | cpm.config
----@param imports string[]
+---@param imports string[] | nil
 function cpm.add_package(config, imports)
     if type(config) == "string" then
         cmake.generator.add_action({
