@@ -22,7 +22,8 @@ cmake.cpm = cpm
 ---@field system boolean | nil
 
 ---@param config string | cpm.config
-function cpm.add_package(config)
+---@param imports string[]
+function cpm.add_package(config, imports)
     if type(config) == "string" then
         cmake.generator.add_action({
             name = "cpm.add_package.str",
@@ -134,4 +135,18 @@ function cpm.add_package(config)
         end,
         context = config
     })
+
+    if imports then
+        for _, import in ipairs(imports) do
+            cmake.registry.add_entry({
+                get_name = function()
+                    return import
+                end,
+
+                on_dep = function(entry)
+                    entry.add_links({ import })
+                end
+            })
+        end
+    end
 end
