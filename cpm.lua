@@ -9,7 +9,7 @@ cmake.cpm = cpm
 ---@field options table<string, string> | nil
 ---@field download_only boolean | nil
 ---
----@field url string | string[]
+---@field url string | string[] | nil
 ---@field url_hash string | nil
 ---
 ---@field git_repository string | nil
@@ -53,7 +53,7 @@ function cpm.add_package(config, imports)
                     writer:write_line("URL ", context.url)
                 else
                     local urls = context.url
-                    ---@cast urls -string
+                    ---@cast urls -nil, -string
 
                     writer:write_line("URL")
                     for _, url in ipairs(urls) do
