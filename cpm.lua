@@ -2,6 +2,13 @@
 local cpm = {}
 cmake.cpm = cpm
 
+local loaded = false
+---@param path string
+function cpm.load(path)
+    cmake.include(path)
+    loaded = true
+end
+
 ---@class cpm.config
 ---@field name string
 ---@field version string | nil
@@ -24,6 +31,10 @@ cmake.cpm = cpm
 ---@param config string | cpm.config
 ---@param imports string[] | nil
 function cpm.add_package(config, imports)
+    if not loaded then
+        error("cpm is not loaded use 'cpm.load(<path>)'")
+    end
+
     if type(config) == "string" then
         cmake.generator.add_action({
             name = "cpm.add_package.str",
