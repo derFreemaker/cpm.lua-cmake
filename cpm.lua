@@ -52,7 +52,7 @@ function cpm.add_package(config, imports)
         ---@param context cpm.config
         func = function(writer, context)
             writer:write_line("CPMAddPackage(")
-                :add_indent()
+                :modify_indent(1)
                 :write_line("NAME ", context.name)
 
             if context.version then
@@ -142,7 +142,7 @@ function cpm.add_package(config, imports)
                 end
             end
 
-            writer:remove_indent():write_line(")")
+            writer:modify_indent(-1):write_line(")")
         end,
         context = config
     })
