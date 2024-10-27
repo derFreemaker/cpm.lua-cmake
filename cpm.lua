@@ -39,8 +39,8 @@ function cpm.add_package(config, imports)
         cmake.generator.add_action({
             name = "cpm.add_package.str",
             ---@param context string
-            func = function(writer, context)
-                writer:write_line("CPMAddPackage(", context, ")")
+            func = function(builder, context)
+                builder:append_line("CPMAddPackage(", context, ")")
             end,
             context = config
         })
@@ -50,99 +50,103 @@ function cpm.add_package(config, imports)
     cmake.generator.add_action({
         name = "cpm.add_package.config",
         ---@param context cpm.config
-        func = function(writer, context)
-            writer:write_line("CPMAddPackage(")
+        func = function(builder, context)
+            builder:append_line("CPMAddPackage(")
                 :modify_indent(1)
-                :write_line("NAME ", context.name)
+                :append_line("NAME ", context.name)
 
             if context.version then
-                writer:write_line("VERSION ", context.version)
+                builder:append_line("VERSION ", context.version)
             end
 
             if context.url then
                 if type(context.url) == "string" then
-                    writer:write_line("URL ", context.url)
+                    builder:append_line("URL ", context.url)
                 else
                     local urls = context.url
                     ---@cast urls -nil, -string
 
-                    writer:write_line("URL")
+                    builder:append_line("URL")
                     for _, url in ipairs(urls) do
-                        writer:write_indent():write_line(url)
+                        builder:append_indent()
+                            :append_line(url)
                     end
                 end
             end
 
             if context.url_hash then
-                writer:write_line("URL_HASH ", context.url_hash)
+                builder:append_line("URL_HASH ", context.url_hash)
             end
 
             if context.git_repository then
-                writer:write_line("GIT_REPOSITORY ", context.git_repository)
+                builder:append_line("GIT_REPOSITORY ", context.git_repository)
             end
 
             if context.git_tag then
-                writer:write_line("GIT_TAG ", context.git_tag)
+                builder:append_line("GIT_TAG ", context.git_tag)
             end
 
             if context.github_repository then
-                writer:write_line("GITHUB_REPOSITORY \"", context.github_repository, "\"")
+                builder:append_line("GITHUB_REPOSITORY \"", context.github_repository, "\"")
             end
 
             if context.gitlab_repository then
-                writer:write_line("GITLAB_REPOSITORY \"", context.gitlab_repository, "\"")
+                builder:append_line("GITLAB_REPOSITORY \"", context.gitlab_repository, "\"")
             end
 
             if context.patches then
                 local patches = context.patches
                 if type(patches) == "string" then
                     ---@cast patches string
-                    writer:write_line("PATCHES \"", context.patches, "\"")
+                    builder:append_line("PATCHES \"", context.patches, "\"")
                 else
                     ---@cast patches string[]
-                    writer:write_line("PATCHES")
+                    builder:append_line("PATCHES")
 
                     for _, patch in ipairs(patches) do
-                        writer:write_indent():write_line("\"", patch, "\"")
+                        builder:append_indent()
+                            :append_line("\"", patch, "\"")
                     end
                 end
             end
 
             if context.options then
-                writer:write_line("OPTIONS")
+                builder:append_line("OPTIONS")
                 for key, value in pairs(context.options) do
-                    writer:write_indent():write_line("\"", key, " ", value, "\"")
+                    builder:append_indent()
+                        :append_line("\"", key, " ", value, "\"")
                 end
             end
 
             if context.download_only ~= nil then
-                writer:write("DOWNLOAD_ONLY ")
+                builder:append("DOWNLOAD_ONLY ")
                 if context.download_only then
-                    writer:write_line("TRUE")
+                    builder:append_line("TRUE")
                 else
-                    writer:write_line("FALSE")
+                    builder:append_line("FALSE")
                 end
             end
 
             if context.exclude_from_all ~= nil then
-                writer:write("EXCLUDE_FROM_ALL ")
+                builder:append("EXCLUDE_FROM_ALL ")
                 if context.exclude_from_all then
-                    writer:write_line("TRUE")
+                    builder:append_line("TRUE")
                 else
-                    writer:write_line("FALSE")
+                    builder:append_line("FALSE")
                 end
             end
 
             if context.system ~= nil then
-                writer:write("SYSTEM ")
+                builder:append("SYSTEM ")
                 if context.exclude_from_all then
-                    writer:write_line("TRUE")
+                    builder:append_line("TRUE")
                 else
-                    writer:write_line("FALSE")
+                    builder:append_line("FALSE")
                 end
             end
 
-            writer:modify_indent(-1):write_line(")")
+            builder:modify_indent(-1)
+                :append_line(")")
         end,
         context = config
     })

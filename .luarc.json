@@ -1,0 +1,11 @@
+{
+    "$schema": "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+    "workspace.library": ["../../Lua/lua-cmake/lua"],
+    "runtime.version": "Lua 5.4",
+    "runtime.pathStrict": true,
+    "diagnostics.ignoredFiles": "Disable",
+    "workspace.ignoreDir": [
+        ".vscode",
+        ".idea"
+    ]
+}
