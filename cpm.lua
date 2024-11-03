@@ -5,8 +5,23 @@ cmake.cpm = cpm
 local loaded = false
 ---@param path string
 function cpm.load(path)
+    if loaded then
+        return
+    end
+
     cmake.include(path)
     loaded = true
+end
+
+local function check_loaded()
+    if not loaded then
+        error("cpm is not loaded use 'cpm.load(<path>)'")
+    end
+end
+
+if lfs.exists("CPM.cmake") then
+    local path = cmake.path_resolver.resolve_path("CPM.cmake")
+    cpm.load(path)
 end
 
 ---@class cpm.config
@@ -31,9 +46,7 @@ end
 ---@param config string | cpm.config
 ---@param imports string[] | nil
 function cpm.add_package(config, imports)
-    if not loaded then
-        error("cpm is not loaded use 'cpm.load(<path>)'")
-    end
+    check_loaded()
 
     if type(config) == "string" then
         cmake.generator.add_action({
